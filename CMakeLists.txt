@@ -145,13 +145,13 @@ if(IMGUI_BACKEND_DX12)
   target_compile_definitions(${PROJECT_NAME} PRIVATE ImTextureID=ImU64)
 endif()
 
-target_compile_options(${PROJECT_NAME}
-  PUBLIC
-    $<$<CXX_COMPILER_ID:MSVC>:$<$<CONFIG:Debug>:/MTd>>
-    $<$<CXX_COMPILER_ID:MSVC>:$<$<CONFIG:MinSizeRel>:/MT>>
-    $<$<CXX_COMPILER_ID:MSVC>:$<$<CONFIG:Release>:/MT>>
-    $<$<CXX_COMPILER_ID:MSVC>:$<$<CONFIG:RelWithDebInfo>:/MTd>>
-)
+# target_compile_options(${PROJECT_NAME}
+#   PUBLIC
+#     $<$<CXX_COMPILER_ID:MSVC>:$<$<CONFIG:Debug>:/MTd>>
+#     $<$<CXX_COMPILER_ID:MSVC>:$<$<CONFIG:MinSizeRel>:/MT>>
+#     $<$<CXX_COMPILER_ID:MSVC>:$<$<CONFIG:Release>:/MT>>
+#     $<$<CXX_COMPILER_ID:MSVC>:$<$<CONFIG:RelWithDebInfo>:/MTd>>
+# )
 
 if(MSVC)
   if(IMGUI_STATIC_LIBRARY)
@@ -159,6 +159,11 @@ if(MSVC)
   else()
     set_property(TARGET ${PROJECT_NAME} PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)
   endif()
+  
+  set_target_properties(${PROJECT_NAME} PROPERTIES
+    MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>DLL
+  )
+
 endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
